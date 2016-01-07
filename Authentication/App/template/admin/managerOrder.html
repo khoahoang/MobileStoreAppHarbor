@@ -1,0 +1,121 @@
+﻿<!--@model PagedList.IPagedList<mobilestore.viewmodels.orderview>
+    @using PagedList.Mvc;
+    <link href="~/Content/css/PagedList.css" rel="stylesheet" type="text/css" />
+
+    @{
+    ViewBag.Title = "Quản lý sản phẩm";
+    }
+    <script src="/Scripts/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            // Document.ready -> link up remove event handler
+            $(".RemoveLink").click(function () {
+                var r = confirm("Bạn có muốn xóa đơn đặt hàng này ??");
+                if (r == true) {
+                    // Get the id from the link
+                    var recordToDelete = $(this).attr("data-id");
+                    if (recordToDelete != '') {
+                        // Perform the ajax post
+                        $.post("/Admin/RemoveOrder", { "id": recordToDelete },
+                            function (data) {
+                                $('#row-' + data.DeleteId).fadeOut('slow');
+                                $('#update-message').text(data.Message);
+                            });
+                    }
+                }
+
+            });
+        });
+    </script>-->
+<h2>Quản lý đơn đặt hàng</h2>
+<table class="table table-condensed" border="1">
+    <thead>
+        <tr>
+            <th>
+                Họ tên khách hàng
+            </th>
+            <th>
+                Tên người nhận
+            </th>
+            <th>
+                Địa chỉ
+            </th>
+            <th>
+                Điện thoại
+            </th>
+            <th>
+                Ngày đặt hàng
+            </th>
+            <th>
+                Tổng tiền
+            </th>
+            <th>
+                Thanh toán
+            </th>
+            <th colspan="2">
+                Thao tác
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="x in list" ng-hide="x.DELETED == 1">
+            <td>{{x.USERNAME}}</td>
+            <td>{{x.NAME}}</td>
+            <td>{{x.ADDRESS}}</td>
+            <td>{{x.PHONE}}</td>
+            <td>{{x.ORDER_DATE | date : format : 'shortDate' }}</td>
+            <td>{{x.TOTAL | number}}</td>
+            <td ng-show="x.PAID == 0">
+                Chưa thanh toán
+                <br />
+                <input type="button" class="btn btn-success" value="Thanh toán" ng-click="thanhToan(x.ORDER_ID)" />
+            </td>
+            <td ng-show="x.PAID == 1">Đã thanh toán</td>
+            <td>
+                <a ng-click="xoa(x.ORDER_ID)" class="RemoveLink" style="float:left; text-decoration:none">
+                    Xóa
+                </a>
+            </td>
+            <td>
+                <a href="#/orderDetail/{{x.ORDER_ID}}">
+                    Xem chi tiết
+                </a>
+            </td>
+        </tr>
+
+        <!--@foreach (var item in Model)
+        {
+        <tr id="row-@item.OrderID">
+            <td>@item.CustomerName</td>
+            <td>@item.RecieveName</td>
+            <td>@item.Address</td>
+            <td>@item.Phone</td>
+            <td>@item.OrderDate</td>
+            <td>@item.Total</td>
+            <td>
+                @if (@item.Paid == 0)
+                {
+                <text>Chưa thanh toán</text>
+                }
+                else
+                {
+                <text>Đã thanh toán</text>
+                }
+            </td>
+            <td>
+                <a href="#" class="RemoveLink" data-id="@item.OrderID" style="float:left; text-decoration:none">
+                    Xóa
+                </a>
+            </td>
+            <td>
+                <a href="@Url.Action(" orderdetail", "Admin" , new { order_id=@item.OrderID, paid=@item.Paid })">
+                    Xem chi tiết
+                </a>
+            </td>
+        </tr>
+        }-->
+    </tbody>
+</table>
+    <!--<p style="color:red">Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount</p>
+    @Html.PagedListPager(Model, page => Url.Action("ManageProduct", "Admin",
+    new { page }))-->
